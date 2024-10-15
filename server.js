@@ -25,14 +25,14 @@ const port = process.env.PORT || 3003;
 
 // ---------- firebase config ----------
 const firebaseConfig = {
-    apiKey: "AIzaSyDaEo87ybie_bOjdqK3DyN4RJLJQiapzQo",
-    authDomain: "greencycle-db.firebaseapp.com",
-    databaseURL: "https://greencycle-db.firebaseio.com",
-    projectId: "greencycle-db",
-    storageBucket: "greencycle-db.appspot.com",
-    messagingSenderId: "596629187371",
-    appId: "1:596629187371:web:b059e8130d76c5ef83336e",
-    measurementId: "G-E35BXMRY4Z",
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    databaseURL: process.env.DATABASE_URL,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
+    measurementId: process.env.MEASUREMENT_ID,
 };
 
 // ---------- initialize app ----------

@@ -1,11 +1,11 @@
-var jwt = require('jsonwebtoken');
-var secretKey = '184FFAC6654C1B2358B9C8DD4C5DC'
+var jwt = require("jsonwebtoken");
+var secretKey = process.env.SECRET_KEY;
 
 module.exports = {
-    encode: function(object) {
-        return jwt.sign(object, secretKey)
+    encode: function (object) {
+        return jwt.sign(object, secretKey);
     },
-    decode: function(token) {
-        return jwt.verify(token, secretKey)
-    }
-}
+    decode: function (token) {
+        return jwt.verify(token, secretKey);
+    },
+};

@@ -1,7 +1,7 @@
-const express = require('express')
-const router = new express.Router()
-const chalk = require('chalk')
-const admin = require('firebase-admin')
+const express = require("express");
+const router = new express.Router();
+const chalk = require("chalk");
+const admin = require("firebase-admin");
 // const serviceAccount = require('../ServiceAccountKey.json')
 // const { request } = require('express')
 // const app = express()
@@ -13,212 +13,243 @@ const admin = require('firebase-admin')
 // app.use(express.json());
 
 const db = admin.firestore();
-const contributorRef = db.collection('contributors')
+const contributorRef = db.collection("contributors");
 
 // ---------- get ----------
 
 // get all contributors
-router.get('/contributor', async (req, res) => {
+router.get("/contributor", async (req, res) => {
     try {
         const allDocs = await contributorRef.get();
-        const docsArray = []
-        allDocs.forEach(doc => {
-            docsArray.push(doc)
-        })
+        const docsArray = [];
+        allDocs.forEach((doc) => {
+            docsArray.push(doc);
+        });
         if (!docsArray.length) {
-            console.log(chalk.red.inverse(' ERR '), chalk.red('No contributor found.'))
+            console.log(chalk.red.inverse(" ERR "), chalk.red("No contributor found."));
         } else {
-            console.log(chalk.cyan.inverse(' GET '), chalk.cyan('Get all contributors:', docsArray.length, 'contributor(s).'))
+            console.log(
+                chalk.cyan.inverse(" GET "),
+                chalk.cyan("Get all contributors:", docsArray.length, "contributor(s).")
+            );
         }
         // usage docsArray.forEach(doc => { }) | get data > doc.data(), get id > doc.id
-        res.status(201).send(docsArray)
+        res.status(201).send(docsArray);
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
 });
 
 // get contributor by contributor doc id
-router.get('/contributor/:id', async (req, res) => {
+router.get("/contributor/:id", async (req, res) => {
     const id = req.params.id;
     try {
         const doc = await contributorRef.doc(id).get();
         if (!doc.exists) {
-            console.log(chalk.red.inverse(' ERR '), chalk.red('No contributor found from this id.'))
+            console.log(
+                chalk.red.inverse(" ERR "),
+                chalk.red("No contributor found from this id.")
+            );
         } else {
-            console.log(chalk.cyan.inverse(' GET '), chalk.cyan('Get contributor:', doc.data().name))
+            console.log(
+                chalk.cyan.inverse(" GET "),
+                chalk.cyan("Get contributor:", doc.data().name)
+            );
         }
-        res.status(201).send(doc.data())
+        res.status(201).send(doc.data());
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
 });
 
 // get all projects in contributor
-router.post('/contributor/project', async (req, res) => {
+router.post("/contributor/project", async (req, res) => {
     const id = req.body.id;
     try {
-        const allDocs = await contributorRef.doc(id).collection('projects').get();
-        const docsArray = []
-        allDocs.forEach(doc => {
-            docsArray.push(doc)
-        })
+        const allDocs = await contributorRef.doc(id).collection("projects").get();
+        const docsArray = [];
+        allDocs.forEach((doc) => {
+            docsArray.push(doc);
+        });
         if (!docsArray.length) {
-            console.log(chalk.red.inverse(' ERR '), chalk.red('No project found.'))
+            console.log(chalk.red.inverse(" ERR "), chalk.red("No project found."));
         } else {
-            console.log(chalk.cyan.inverse(' GET '), chalk.cyan('Get all projects:', docsArray.length, 'project(s).'))
+            console.log(
+                chalk.cyan.inverse(" GET "),
+                chalk.cyan("Get all projects:", docsArray.length, "project(s).")
+            );
         }
         // use docsArray.forEach(doc => { }) | get data > doc.data(), get id > doc.id
-        res.status(201).send(docsArray)
+        res.status(201).send(docsArray);
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
-})
+});
 
 // get project in contributor by project doc id
-router.post('/contributor/project/:id', async (req, res) => {
+router.post("/contributor/project/:id", async (req, res) => {
     const contributorId = req.body.id;
     const projectId = req.params.id;
     try {
-        const doc = await contributorRef.doc(contributorId).collection('projects').doc(projectId).get();
+        const doc = await contributorRef
+            .doc(contributorId)
+            .collection("projects")
+            .doc(projectId)
+            .get();
         if (!doc.exists) {
-            console.log(chalk.red.inverse(' ERR '), chalk.red('No project found from this id.'))
+            console.log(chalk.red.inverse(" ERR "), chalk.red("No project found from this id."));
         } else {
-            console.log(chalk.cyan.inverse(' GET '), chalk.cyan('Get project:', doc.name))
+            console.log(chalk.cyan.inverse(" GET "), chalk.cyan("Get project:", doc.name));
         }
-        res.status(201).send(doc.data())
+        res.status(201).send(doc.data());
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
-})
+});
 
 // ---------- create ----------
 
 // add new contributor
-router.post('/contributor/add', async (req, res) => {
-    const body = req.body
+router.post("/contributor/add", async (req, res) => {
+    const body = req.body;
     try {
-        const doc = await contributorRef.add(body)
-        console.log(chalk.green.inverse(' ADD '), chalk.green('Added contributor'))
-        res.status(201).send(body)
+        const doc = await contributorRef.add(body);
+        console.log(chalk.green.inverse(" ADD "), chalk.green("Added contributor"));
+        res.status(201).send(body);
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
-})
+});
 
 // add new project to specific contributor id
-router.post('/contributor/add/:id', async (req, res) => {
-    const id = req.params.id
-    const body = req.body
+router.post("/contributor/add/:id", async (req, res) => {
+    const id = req.params.id;
+    const body = req.body;
     try {
-        const doc = await contributorRef.doc(id).collection('projects').add(body)
-        console.log(chalk.green.inverse(' ADD '), chalk.green('Added project'))
-        res.status(201).send(body)
+        const doc = await contributorRef.doc(id).collection("projects").add(body);
+        console.log(chalk.green.inverse(" ADD "), chalk.green("Added project"));
+        res.status(201).send(body);
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
-})
+});
 
 // ---------- update ----------
 
 // update contributor by id
-router.put('/contributor/updatecontributor/:id', async (req, res) => {
-    const id = req.params.id
-    const body = req.body
+router.put("/contributor/updatecontributor/:id", async (req, res) => {
+    const id = req.params.id;
+    const body = req.body;
     try {
-        const doc = await contributorRef.doc(id).get()
+        const doc = await contributorRef.doc(id).get();
         if (!doc.exists) {
-            console.log(chalk.red.inverse(' ERR '), chalk.red('No contributor found.'))
+            console.log(chalk.red.inverse(" ERR "), chalk.red("No contributor found."));
         } else {
-            contributorRef.doc(id).update(body)
-            console.log(chalk.magenta.inverse(' UPD '), chalk.magenta('Updated contributor data'))
+            contributorRef.doc(id).update(body);
+            console.log(chalk.magenta.inverse(" UPD "), chalk.magenta("Updated contributor data"));
         }
-        const updatedDoc = await contributorRef.doc(id).get()
-        res.status(201).send(updatedDoc.data())
+        const updatedDoc = await contributorRef.doc(id).get();
+        res.status(201).send(updatedDoc.data());
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
-})
+});
 
 // update project by id (contributor id in body project id in url)
-router.put('/contributor/updateproject/:id', async (req, res) => {
-    const projectId = req.params.id
-    const contributorId = req.body.id
-    const body = req.body
+router.put("/contributor/updateproject/:id", async (req, res) => {
+    const projectId = req.params.id;
+    const contributorId = req.body.id;
+    const body = req.body;
     delete body.id;
     try {
-        const doc = await contributorRef.doc(contributorId).collection('projects').doc(projectId).get()
+        const doc = await contributorRef
+            .doc(contributorId)
+            .collection("projects")
+            .doc(projectId)
+            .get();
         if (!doc.exists) {
-            console.log(chalk.red.inverse(' ERR '), chalk.red('Not found.'))
+            console.log(chalk.red.inverse(" ERR "), chalk.red("Not found."));
         } else {
-            if (body.hasOwnProperty('material')) {
-                const materialArray = body.material
+            if (body.hasOwnProperty("material")) {
+                const materialArray = body.material;
                 const dataJson = {
-                    "material": materialArray,
-                    "address": doc.data().address,
-                    "name": doc.data().name,
-                    "preparing": doc.data().preparing,
-                    "projectDetail": doc.data().projectDetail,
-                    "shippingService": doc.data().shippingService
-                }
-                contributorRef.doc(contributorId).collection('projects').doc(projectId).set(dataJson)
-                delete body.material
+                    material: materialArray,
+                    address: doc.data().address,
+                    name: doc.data().name,
+                    preparing: doc.data().preparing,
+                    projectDetail: doc.data().projectDetail,
+                    shippingService: doc.data().shippingService,
+                };
+                contributorRef
+                    .doc(contributorId)
+                    .collection("projects")
+                    .doc(projectId)
+                    .set(dataJson);
+                delete body.material;
             }
-            contributorRef.doc(contributorId).collection('projects').doc(projectId).update(body)
-            console.log(chalk.magenta.inverse(' UPD '), chalk.magenta('Updated project data'))
+            contributorRef.doc(contributorId).collection("projects").doc(projectId).update(body);
+            console.log(chalk.magenta.inverse(" UPD "), chalk.magenta("Updated project data"));
         }
-        const updatedDoc = await contributorRef.doc(contributorId).collection('projects').doc(projectId).get()
-        res.status(201).send(updatedDoc.data())
+        const updatedDoc = await contributorRef
+            .doc(contributorId)
+            .collection("projects")
+            .doc(projectId)
+            .get();
+        res.status(201).send(updatedDoc.data());
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
-})
+});
 
 // ---------- delete ----------
 
 // delete contributor by id
-router.delete('/contributor/:id', async (req, res) => {
-    const id = req.params.id
+router.delete("/contributor/:id", async (req, res) => {
+    const id = req.params.id;
     try {
-        const doc = await contributorRef.doc(id).get()
+        const doc = await contributorRef.doc(id).get();
         if (!doc.exists) {
-            console.log(chalk.red.inverse(' ERR '), chalk.red('No contributor found'))
+            console.log(chalk.red.inverse(" ERR "), chalk.red("No contributor found"));
         } else {
-            contributorRef.doc(id).delete()
-            console.log(chalk.yellow.inverse(' DEL '), chalk.yellow('Deleted a contributor', doc.id))
-            const newCollection = await contributorRef.get()
-            const docsArray = []
-            newCollection.forEach(doc => {
-                docsArray.push(doc.data())
-            })
+            contributorRef.doc(id).delete();
+            console.log(
+                chalk.yellow.inverse(" DEL "),
+                chalk.yellow("Deleted a contributor", doc.id)
+            );
+            const newCollection = await contributorRef.get();
+            const docsArray = [];
+            newCollection.forEach((doc) => {
+                docsArray.push(doc.data());
+            });
         }
-        res.status(201).send(body)
+        res.status(201).send(body);
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
-})
+});
 
 // delete project by id (contributor id in body project id in url)
-router.delete('/contributor/deleteproject/:id', async (req, res) => {
-    const projectId = req.params.id
-    const contributorId = req.body.id
-    const body = req.body
+router.delete("/contributor/deleteproject/:id", async (req, res) => {
+    const projectId = req.params.id;
+    const contributorId = req.body.id;
+    const body = req.body;
     try {
-        const doc = await contributorRef.doc(contributorId).get()
+        const doc = await contributorRef.doc(contributorId).get();
         if (!doc.exists) {
-            console.log(chalk.red.inverse(' ERR '), chalk.red('No contributor found'))
+            console.log(chalk.red.inverse(" ERR "), chalk.red("No contributor found"));
         } else {
-            contributorRef.doc(contributorId).collection('projects').doc(projectId).delete()
-            console.log(chalk.yellow.inverse(' DEL '), chalk.yellow('Delete a project'))
+            contributorRef.doc(contributorId).collection("projects").doc(projectId).delete();
+            console.log(chalk.yellow.inverse(" DEL "), chalk.yellow("Delete a project"));
         }
-        res.status(201).send(body)
+        res.status(201).send(body);
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
-})
+});
 
 module.exports = router;
 
-// to delete collection (or sub-collection) need to delete all doc and collection will be deleted automatically 
+// to delete collection (or sub-collection) need to delete all doc and collection will be deleted automatically
 // to delete field need to delete by update
 
 // ---------- other ----------
@@ -278,7 +309,7 @@ module.exports = router;
 //     } else {
 //         console.log(chalk.cyan.inverse('manu data:'), doc.data());
 //     }
-// } 
+// }
 // // getManufacturer('sample manufacturer', db);
 
 // // get product doc in manufacturer doc from doc id
@@ -290,7 +321,7 @@ module.exports = router;
 //     } else {
 //         console.log(chalk.green.inverse('product data:'), doc.data());
 //     }
-// } 
+// }
 // // getProduct('sample product 2', db);
 
 // // get product doc in manufacturer doc from searching with key "name"
@@ -315,7 +346,7 @@ module.exports = router;
 //     doc.forEach(doc => {
 //         console.log(chalk.blue.inverse('product data from value:'), doc.data());
 //     });
-// } 
+// }
 // // getProductFromValue('sample product 2', db);
 
 // //get all sub-collections
@@ -325,7 +356,7 @@ module.exports = router;
 //     doc.forEach(doc => {
 //         console.log(chalk.yellow.inverse('found collections with id:'), doc.id);
 //     })
-// } 
+// }
 // //getSubCollections(db);
 
 // // get sample contributor
@@ -400,7 +431,7 @@ module.exports = router;
 // // })
 
 // // ------------- delete -------------
-// // to delete collection (or sub-collection) need to delete all doc and collection will be deleted automatically 
+// // to delete collection (or sub-collection) need to delete all doc and collection will be deleted automatically
 // // to delete field need to delete by update
 
 // // delete doc
