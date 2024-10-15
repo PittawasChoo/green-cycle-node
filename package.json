@@ -1,0 +1,49 @@
+{
+  "name": "greencycle-back",
+  "version": "1.0.0",
+  "description": "greencycle system: backend",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pittawas17/GreenCycle-Back.git"
+  },
+  "keywords": [
+    "greencycle",
+    "back"
+  ],
+  "author": "greencycle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pittawas17/GreenCycle-Back/issues"
+  },
+  "homepage": "https://github.com/pittawas17/GreenCycle-Back#readme",
+  "dependencies": {
+    "@google-cloud/storage": "^5.8.1",
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "chalk": "^4.1.0",
+    "connect-busboy": "0.0.2",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "express-jwt": "^6.0.0",
+    "firebase": "^8.1.2",
+    "firebase-admin": "^9.2.0",
+    "firebase-tools": "^8.16.2",
+    "http": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
+    "node-datetime": "^2.1.2",
+    "nodemailer": "^6.5.0",
+    "validator": "^13.1.17"
+  },
+  "engines": {
+    "node": "14.13.0",
+    "npm": "6.14.9"
+  }
+}
