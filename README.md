@@ -1,2 +1,2 @@
-# green-cycle-node
+# GreenCycle
 Senior project: GreenCycle - Back-end repository
